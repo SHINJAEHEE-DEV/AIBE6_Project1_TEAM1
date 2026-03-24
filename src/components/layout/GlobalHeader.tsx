@@ -1,6 +1,6 @@
-import { Search } from "lucide-react";
 import Link from "next/link";
 import GNBMenu from "./GNBMenu";
+import SearchBox from "./SearchBox";
 
 export default function GlobalHeader() {
   return (
@@ -30,14 +30,7 @@ export default function GlobalHeader() {
             검색바 그룹: 상대 위치(relative)를 사용하여 내부에 아이콘을 절대 위치(absolute)로 띄울 수 있게 합니다.
             원형(rounded-full) 모양의 배경색(bg-gray-100)을 적용했습니다.
           */}
-          <div className="relative w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="여행지, 관광명소를 검색하세요"
-              className="w-full bg-gray-100/80 rounded-full py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
-            />
-          </div>
+          <SearchBox />
         </div>
 
         {/* 3. 우측 네비게이션 아이콘 영역 */}
