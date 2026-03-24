@@ -1,5 +1,6 @@
-import { Bookmark, CalendarDays, Compass, Home, Search, User } from "lucide-react";
 import Link from "next/link";
+import GNBMenu from "./GNBMenu";
+import SearchBox from "./SearchBox";
 
 export default function GlobalHeader() {
   return (
@@ -29,43 +30,11 @@ export default function GlobalHeader() {
             검색바 그룹: 상대 위치(relative)를 사용하여 내부에 아이콘을 절대 위치(absolute)로 띄울 수 있게 합니다.
             원형(rounded-full) 모양의 배경색(bg-gray-100)을 적용했습니다.
           */}
-          <div className="relative w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="여행지, 관광명소를 검색하세요"
-              className="w-full bg-gray-100/80 rounded-full py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
-            />
-          </div>
+          <SearchBox />
         </div>
 
         {/* 3. 우측 네비게이션 아이콘 영역 */}
-        {/*
-          flex와 gap-6을 주어 아이콘들 사이의 간격을 일정하게 띄웁니다.
-        */}
-        <nav className="flex items-center gap-6 text-gray-700">
-          <Link href="/" className="flex flex-col items-center gap-1 hover:text-black hover:font-medium transition-colors">
-            <Home className="w-5 h-5" />
-            <span className="text-[11px]">홈</span>
-          </Link>
-          <Link href="/explore" className="flex flex-col items-center gap-1 hover:text-black hover:font-medium transition-colors">
-            {/* 탐색 아이콘은 약간 굵게 (strokeWidth) 처리하여 강조할 수 있습니다. 이미지는 컴퍼스 모양입니다. */}
-            <Compass className="w-5 h-5 stroke-[2.5]" />
-            <span className="text-[11px] font-bold text-black text-center">탐색</span>
-          </Link>
-          <Link href="/schedule" className="flex flex-col items-center gap-1 hover:text-black hover:font-medium transition-colors">
-            <CalendarDays className="w-5 h-5" />
-            <span className="text-[11px]">일정</span>
-          </Link>
-          <Link href="/saved" className="flex flex-col items-center gap-1 hover:text-black hover:font-medium transition-colors">
-            <Bookmark className="w-5 h-5" />
-            <span className="text-[11px]">저장</span>
-          </Link>
-          <Link href="/mypage" className="flex flex-col items-center gap-1 hover:text-black hover:font-medium transition-colors">
-            <User className="w-5 h-5" />
-            <span className="text-[11px]">마이</span>
-          </Link>
-        </nav>
+        <GNBMenu />
       </div>
     </header>
   );
