@@ -8,7 +8,7 @@ export default function MediaUploader({ supabase, onUpload, onRemove }: any) {
   const [images, setImages] = useState<{ url: string; path: string }[]>([])
   const [uploading, setUploading] = useState(false)
 
-  // 사진/영상 첨부
+  // 사진 첨부
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files) return
@@ -23,7 +23,6 @@ export default function MediaUploader({ supabase, onUpload, onRemove }: any) {
       const { error } = await supabase.storage
         .from('media-storage')
         .upload(fileName, file)
-
       if (error) {
         console.log(error)
         alert('파일 형식 및 용량을 확인해주세요')
@@ -45,7 +44,7 @@ export default function MediaUploader({ supabase, onUpload, onRemove }: any) {
     e.target.value = ''
   }
 
-  // 사진/영상 첨부 취소
+  // 사진 첨부 취소
   const handleRemove = async (index: number) => {
     const target = images[index]
 

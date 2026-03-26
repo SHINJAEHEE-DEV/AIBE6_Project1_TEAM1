@@ -6,8 +6,8 @@ import RatingSelector from '@/components/domain/review/RatingSelector'
 import { createClient } from '@/utils/supabase/client'
 
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function ReviewWritePage() {
   const [rating, setRating] = useState(0)
@@ -19,22 +19,26 @@ export default function ReviewWritePage() {
     stairs: '',
   })
 
+  const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const supabase = createClient()
   const router = useRouter()
 
-  // 유저 정보 가져오기?
-  // useEffect(() => {
-  //   const getUser = async () => {
-  //     const {
-  //       data: { user },
-  //     } = await supabase.auth.getUser()
+  // url 형식 : /review/write?placeId=2
+  const searchParams = useSearchParams()
+  const placeId = searchParams.get('placeId')
 
-  //     setUserId(user?.id ?? null)
-  //   }
+  // 유저 정보 가져오기
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
 
-  //   getUser()
-  // }, [])
+      setUserId(user?.id ?? null)
+    }
+    getUser()
+  }, [])
 
   // 리뷰 등록
   const handleSubmit = async () => {
@@ -46,8 +50,9 @@ export default function ReviewWritePage() {
     const { data: reviewData, error: reviewError } = await supabase
       .from('reviews')
       .insert({
+        //user_id: userId,
         user_id: '0ba3c127-607e-4644-96fd-a186c7096422',
-        place_id: 2,
+        place_id: Number(placeId),
         rating,
         content,
         slope: options.slope,
@@ -90,7 +95,12 @@ export default function ReviewWritePage() {
     <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="flex-col w-1/3 self-center">
         <div className="py-4">
-          <button className="text-2xl p-2 cursor-pointer">←</button>
+          <button
+            className="text-2xl p-2 cursor-pointer"
+            onClick={() => router.back()}
+          >
+            ←
+          </button>
           <h1 className="inline text-2xl p-4 font-bold">리뷰작성</h1>
         </div>
 
@@ -130,10 +140,10 @@ export default function ReviewWritePage() {
         <div className="mb-6">
           <MediaUploader
             supabase={supabase}
-            onUpload={(urls: string[]) =>
+            onUpload={(urls: { url: string; path: string }[]) =>
               setMedia((prev) => [...prev, ...urls])
             }
-            onRemove={(urls: string[]) => setMedia(urls)}
+            onRemove={(urls: { url: string; path: string }[]) => setMedia(urls)}
           />
         </div>
 
