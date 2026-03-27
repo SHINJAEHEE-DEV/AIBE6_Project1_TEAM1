@@ -1,30 +1,28 @@
 import PlaceCard from './PlaceCard'
-
-interface Place {
-  id: string
-  name: string
-  address: string
-  category: string
-  rating?: number
-}
+import type { Trip, TripDetailItem } from './PlaceSearchSection'
 
 interface PlaceListProps {
-  places: Place[]
+  trips: Trip[]
+  tripDetailsMap: Record<number, TripDetailItem[]>
 }
 
-export default function PlaceList({ places }: PlaceListProps) {
-  if (places.length === 0) {
+export default function PlaceList({ trips, tripDetailsMap }: PlaceListProps) {
+  if (trips.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500">
-        검색 결과가 없습니다.
+        조건에 맞는 일정이 없습니다.
       </div>
     )
   }
 
   return (
     <div className="space-y-3">
-      {places.map((place) => (
-        <PlaceCard key={place.id} place={place} />
+      {trips.map((trip) => (
+        <PlaceCard
+          key={trip.id}
+          trip={trip}
+          detailItems={tripDetailsMap[trip.id] ?? []}
+        />
       ))}
     </div>
   )

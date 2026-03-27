@@ -1,48 +1,40 @@
+import PlaceCategorySection from './PlaceCategorySection'
 import PlaceList from './PlaceList'
-
-interface Place {
-  id: string
-  name: string
-  address: string
-  category: string
-  rating?: number
-}
+import type { Trip, TripDetailItem } from './PlaceSearchSection'
 
 interface PlaceResultSectionProps {
-  keyword: string
-  places: Place[]
+  trips: Trip[]
+  tripDetailsMap: Record<number, TripDetailItem[]>
   isLoading?: boolean
   errorMessage?: string
+  selectedCategory: string
+  onSelectCategory: (category: string) => void
 }
 
 export default function PlaceResultSection({
-  keyword,
-  places,
+  trips,
+  tripDetailsMap,
   isLoading = false,
   errorMessage = '',
+  selectedCategory,
+  onSelectCategory,
 }: PlaceResultSectionProps) {
-  const hasKeyword = keyword.trim().length > 0
-
   return (
     <section className="space-y-4">
-      <div>
-        <h2 className="text-xl font-bold">
-          {hasKeyword ? '검색 결과' : '지금 뜨는 여행지'}
-        </h2>
-        <p className="mt-1 text-sm text-gray-500">
-          {hasKeyword
-            ? `"${keyword}"에 대한 장소를 보여드릴게요.`
-            : '지금 인기 있는 여행지를 둘러보세요.'}
-        </p>
-      </div>
+      <PlaceCategorySection
+        selectedCategory={selectedCategory}
+        onSelectCategory={onSelectCategory}
+      />
 
       {isLoading && (
-        <p className="text-sm text-gray-500">장소를 검색 중입니다...</p>
+        <p className="text-sm text-gray-500">일정을 불러오는 중입니다...</p>
       )}
 
       {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
 
-      {!isLoading && <PlaceList places={places} />}
+      {!isLoading && !errorMessage && (
+        <PlaceList trips={trips} tripDetailsMap={tripDetailsMap} />
+      )}
     </section>
   )
 }

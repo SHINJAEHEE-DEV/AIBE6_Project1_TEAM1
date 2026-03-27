@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams.get('query')
   const categoryGroupCode = req.nextUrl.searchParams.get('categoryGroupCode')
+  const pageParam = req.nextUrl.searchParams.get('page')
+  const sizeParam = req.nextUrl.searchParams.get('size')
 
   if (!query || !query.trim()) {
     return NextResponse.json(
@@ -20,9 +22,14 @@ export async function GET(req: NextRequest) {
     )
   }
 
+  const page = Math.max(1, Number(pageParam) || 1)
+  const size = Math.min(15, Math.max(1, Number(sizeParam) || 9))
+
   try {
     const kakaoParams = new URLSearchParams({
       query: query.trim(),
+      page: String(page),
+      size: String(size),
     })
 
     if (categoryGroupCode) {
@@ -52,7 +59,15 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json()
-    return NextResponse.json(data)
+
+    return NextResponse.json({
+      documents: data.documents ?? [],
+      meta: data.meta ?? {
+        is_end: true,
+        pageable_count: 0,
+        total_count: 0,
+      },
+    })
   } catch (error) {
     console.error('카카오 장소 검색 오류:', error)
 
