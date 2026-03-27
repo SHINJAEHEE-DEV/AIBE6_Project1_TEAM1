@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams.get('query')
-  const categoryGroupCode = req.nextUrl.searchParams.get('categoryGroupCode')
   const pageParam = req.nextUrl.searchParams.get('page')
   const sizeParam = req.nextUrl.searchParams.get('size')
+  const categoryGroupCode = req.nextUrl.searchParams.get('categoryGroupCode')
 
   if (!query || !query.trim()) {
     return NextResponse.json(
