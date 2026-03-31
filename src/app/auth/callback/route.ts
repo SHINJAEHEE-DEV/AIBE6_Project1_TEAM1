@@ -31,20 +31,24 @@ export async function GET(request: Request) {
       // 없다면 새로 가입한 유저이므로 profile 테이블에 insert
       if (!existingProfile) {
         const metadata = user.user_metadata || {}
-        // 구글, 카카오 등의 메타데이터에서 이름과 프로필 사진을 가져옵니다.
-        const nickname = metadata.name || metadata.full_name || `user_${user.id.substring(0, 8)}`
+        // 이메일 가입에서 사용한 'nickname' 메타데이터도 확인하도록 추가합니다.
+        const nickname = metadata.nickname || metadata.name || metadata.full_name || `user_${user.id.substring(0, 8)}`
         const avatar_url = metadata.avatar_url || metadata.picture || ''
         
-        await supabase.from('profiles').insert({
+        const { error: insertError } = await supabase.from('profiles').insert({
           id: user.id,
           nickname: nickname,
           avatar_url: avatar_url,
           email: user.email || '',
           // created_at은 DB 기본값이 설정되어 있다면 생략 가능하지만, 요청하신 컬럼 형태에 맞게 넣습니다.
           created_at: new Date().toISOString()
-        }).then(() => {
-          console.log('User profile created successfully');
         })
+        
+        if (insertError) {
+          console.error('User profile creation failed:', insertError)
+        } else {
+          console.log('User profile created successfully')
+        }
           
 
         
